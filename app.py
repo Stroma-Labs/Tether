@@ -145,15 +145,11 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. INTELLIGENCE LOADER ---
+# --- 2. INTELLIGENCE LOADER (Cloud Ready) ---
 @st.cache_resource
 def load_nlp():
-    # The model is now installed via requirements.txt
+    # The model is installed via requirements.txt, so we just load it.
     return spacy.load("en_core_web_sm")
-    except:
-        import subprocess
-        subprocess.check_call([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
-        return spacy.load("en_core_web_sm")
 
 @st.cache_data
 def load_db():
@@ -237,7 +233,6 @@ def analyze_text(text):
                 # Logic: Weakness
                 if signal['Role'] == "Weakness":
                     trigger_word = signal['Trigger'].lower()
-                    # Check the Hard Filter
                     if trigger_word not in FALSE_POSITIVES:
                         weaknesses_found.append(signal['Trigger'].upper())
                 
@@ -411,11 +406,9 @@ if st.session_state.get('analyzed'):
                 st.session_state.get('weaknesses', [])
             )
             
-            # FORMATTING FIX: Clean up Markdown Headers for Consistency
+            # FORMATTING FIX
             clean_text = raw_text.replace("### PART 1", "<div class='story-header'>PART 1").replace("### PART 2", "<div class='story-header'>PART 2")
             clean_text = clean_text.replace("THE PROFESSIONAL STORY", "THE PROFESSIONAL STORY</div>").replace("THE POTENTIAL REPORT", "THE POTENTIAL REPORT</div>")
-            
-            # If AI uses different markdown, just ensure styling works
             clean_text = re.sub(r'###\s*(.*)', r"<div class='story-header'>\1</div>", raw_text)
 
             st.markdown(f"<div class='story-container'>{clean_text}</div>", unsafe_allow_html=True)
