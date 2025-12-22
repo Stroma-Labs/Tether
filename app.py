@@ -1,4 +1,4 @@
-# --- APP.PY V4.6 (Gemini 2.0 Upgrade) ---
+# --- APP.PY V4.6.2 (Remove Spacy Downloader) ---
 
 import streamlit as st
 import google.generativeai as genai
@@ -56,11 +56,7 @@ st.markdown("""
 # --- 2. LOGIC ENGINE (NLP & SCORING) ---
 @st.cache_resource
 def load_nlp():
-    try:
-        return spacy.load("en_core_web_sm")
-    except:
-        spacy.cli.download("en_core_web_sm")
-        return spacy.load("en_core_web_sm")
+    return spacy.load("en_core_web_sm")
 
 nlp = load_nlp()
 
